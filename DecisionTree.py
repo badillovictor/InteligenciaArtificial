@@ -17,7 +17,7 @@ def PrintDataFrame(sampleRatio, variable, entropyTable, gain):
     print(f'Split: {sampleRatio}:{round(1-sampleRatio, 1)} - Variable {variable}, Ganancia: {gain}')
     df = pd.DataFrame(entropyTable, columns=['Atributo', 'Exitos', 'Fracasos', 'Casos', 'Entropia'])
     print(df)
-    print('\n')
+    print('')
 
 
 if __name__ == '__main__':
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         treeEntropy = ShannonEntropy(yesCount, len(sampleSplit) - yesCount, len(sampleSplit))
         for variableIndex in range(len(variables)):
             entropyTable = []
-            gain = 0
+            variableEntropy = 0
             for attribute in variables[variableIndex]:
                 positiveCount = 0
                 negativeCount = 0
@@ -60,8 +60,9 @@ if __name__ == '__main__':
                 totalCases = positiveCount + negativeCount
                 attributeEntropy = ShannonEntropy(positiveCount, negativeCount, totalCases)
                 attributeLine = [attribute, positiveCount, negativeCount, totalCases, attributeEntropy]
-                gain += totalCases / len(sampleSplit) * attributeEntropy
+                variableEntropy += totalCases / len(sampleSplit) * attributeEntropy
                 entropyTable.append(attributeLine)
+            gain = treeEntropy - variableEntropy
             tablesPerSampleRatio.append([entropyTable, gain])
         tablesGlobal.append(tablesPerSampleRatio)
     for sampleRatioIndex in range(len(tablesGlobal)):
